@@ -17,28 +17,26 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.3.2'
+        classpath 'com.android.tools.build:gradle:8.5.1'
         classpath 'com.google.android.gms:strict-version-matcher-plugin:1.2.4'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20'
         classpath 'org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.0.20'
     }
 }
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url 'https://jitpack.io'
-            content {
-                includeGroup "com.github.philburk"
-            }
-        }
-    }
     if (it.hasProperty('externalBuildDir')) {
         if (!new File(externalBuildDir).isAbsolute()) {
             externalBuildDir = new File(rootDir, externalBuildDir)
         }
         buildDir = "${externalBuildDir}/${project.name}"
     }
-    group = 'androidx.media3'
+    group = project.findProperty("gpr.groupId") as String
+}
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    def Properties localProps = new Properties()
+    localProps.load(localPropertiesFile.newDataInputStream())
+    localProps.each { key, value ->
+        project.ext.set(key.toString(), value.toString())
+    }
 }
