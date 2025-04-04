@@ -24,6 +24,20 @@ buildscript {
     }
 }
 allprojects {
+
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/FreeCastInc/FC_Android_Player_SDKs")
+            credentials {
+                username = findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
     if (it.hasProperty('externalBuildDir')) {
         if (!new File(externalBuildDir).isAbsolute()) {
             externalBuildDir = new File(rootDir, externalBuildDir)
